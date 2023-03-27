@@ -1,0 +1,740 @@
+Index: android/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/.gitignore b/android/.gitignore
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/.gitignore	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,13 @@
++gradle-wrapper.jar
++/.gradle
++/captures/
++/gradlew
++/gradlew.bat
++/local.properties
++GeneratedPluginRegistrant.java
++
++# Remember to never publicly share your keystore.
++# See https://flutter.dev/docs/deployment/android#reference-the-keystore-from-the-app
++key.properties
++**/*.keystore
++**/*.jks
+Index: android/app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/build.gradle b/android/app/build.gradle
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/build.gradle	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,74 @@
++def localProperties = new Properties()
++def localPropertiesFile = rootProject.file('local.properties')
++if (localPropertiesFile.exists()) {
++    localPropertiesFile.withReader('UTF-8') { reader ->
++        localProperties.load(reader)
++    }
++}
++
++def flutterRoot = localProperties.getProperty('flutter.sdk')
++if (flutterRoot == null) {
++    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
++}
++
++def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
++if (flutterVersionCode == null) {
++    flutterVersionCode = '1'
++}
++
++def flutterVersionName = localProperties.getProperty('flutter.versionName')
++if (flutterVersionName == null) {
++    flutterVersionName = '1.0'
++}
++
++apply plugin: 'com.android.application'
++apply plugin: 'kotlin-android'
++apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
++
++def keystoreProperties = new Properties()
++def keystorePropertiesFile = rootProject.file('key.properties')
++if (keystorePropertiesFile.exists()) {
++    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
++}
++
++android {
++    compileSdkVersion 33
++    ndkVersion flutter.ndkVersion
++
++    compileOptions {
++        sourceCompatibility JavaVersion.VERSION_1_8
++        targetCompatibility JavaVersion.VERSION_1_8
++    }
++
++    kotlinOptions {
++        jvmTarget = '1.8'
++    }
++
++    sourceSets {
++        main.java.srcDirs += 'src/main/kotlin'
++    }
++
++    defaultConfig {
++        applicationId "nmacosta.dev.todo_list"
++        minSdkVersion 18
++        targetSdkVersion 33
++        versionCode flutterVersionCode.toInteger()
++        versionName flutterVersionName
++    }
++
++    buildTypes {
++        release {
++            // TODO: Add your own signing config for the release build.
++            // Signing with the debug keys for now, so `flutter run --release` works.
++            signingConfig signingConfigs.debug
++        }
++    }
++}
++
++flutter {
++    source '../..'
++}
++
++dependencies {
++    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
++}
+Index: android/app/src/debug/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/debug/AndroidManifest.xml b/android/app/src/debug/AndroidManifest.xml
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/debug/AndroidManifest.xml	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,8 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="norton.dev.todo_list">
++    <!-- The INTERNET permission is required for development. Specifically,
++         the Flutter tool needs it to communicate with the running application
++         to allow setting breakpoints, to provide hot reload, etc.
++    -->
++    <uses-permission android:name="android.permission.INTERNET"/>
++</manifest>
+Index: android/app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/main/AndroidManifest.xml	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,34 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="norton.dev.todo_list">
++   <application
++        android:label="Lista de Tarefas"
++        android:name="${applicationName}"
++        android:icon="@mipmap/ic_launcher">
++        <activity
++            android:name=".MainActivity"
++            android:exported="true"
++            android:launchMode="singleTop"
++            android:theme="@style/LaunchTheme"
++            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
++            android:hardwareAccelerated="true"
++            android:windowSoftInputMode="adjustResize">
++            <!-- Specifies an Android theme to apply to this Activity as soon as
++                 the Android process has started. This theme is visible to the user
++                 while the Flutter UI initializes. After that, this theme continues
++                 to determine the Window background behind the Flutter UI. -->
++            <meta-data
++              android:name="io.flutter.embedding.android.NormalTheme"
++              android:resource="@style/NormalTheme"
++              />
++            <intent-filter>
++                <action android:name="android.intent.action.MAIN"/>
++                <category android:name="android.intent.category.LAUNCHER"/>
++            </intent-filter>
++        </activity>
++        <!-- Don't delete the meta-data below.
++             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
++        <meta-data
++            android:name="flutterEmbedding"
++            android:value="2" />
++    </application>
++</manifest>
+Index: android/app/src/main/kotlin/norton/dev/todo_list/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/kotlin/norton/dev/todo_list/MainActivity.kt b/android/app/src/main/kotlin/norton/dev/todo_list/MainActivity.kt
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/main/kotlin/norton/dev/todo_list/MainActivity.kt	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,6 @@
++package norton.dev.todo_list
++
++import io.flutter.embedding.android.FlutterActivity
++
++class MainActivity: FlutterActivity() {
++}
+Index: android/app/src/main/res/drawable-v21/launch_background.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/drawable-v21/launch_background.xml b/android/app/src/main/res/drawable-v21/launch_background.xml
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/main/res/drawable-v21/launch_background.xml	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Modify this file to customize your launch splash screen -->
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item android:drawable="?android:colorBackground" />
++
++    <!-- You can insert your own image assets here -->
++    <!-- <item>
++        <bitmap
++            android:gravity="center"
++            android:src="@mipmap/launch_image" />
++    </item> -->
++</layer-list>
+Index: android/app/src/main/res/drawable/launch_background.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/drawable/launch_background.xml b/android/app/src/main/res/drawable/launch_background.xml
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/main/res/drawable/launch_background.xml	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Modify this file to customize your launch splash screen -->
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item android:drawable="@android:color/white" />
++
++    <!-- You can insert your own image assets here -->
++    <!-- <item>
++        <bitmap
++            android:gravity="center"
++            android:src="@mipmap/launch_image" />
++    </item> -->
++</layer-list>
+Index: android/app/src/main/res/values-night/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/values-night/styles.xml b/android/app/src/main/res/values-night/styles.xml
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/main/res/values-night/styles.xml	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,18 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is on -->
++    <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
++        <!-- Show a splash screen on the activity. Automatically removed when
++             the Flutter engine draws its first frame -->
++        <item name="android:windowBackground">@drawable/launch_background</item>
++    </style>
++    <!-- Theme applied to the Android Window as soon as the process has started.
++         This theme determines the color of the Android Window while your
++         Flutter UI initializes, as well as behind your Flutter UI while its
++         running.
++
++         This Theme is only used starting with V2 of Flutter's Android embedding. -->
++    <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
++        <item name="android:windowBackground">?android:colorBackground</item>
++    </style>
++</resources>
+Index: android/app/src/main/res/values/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/main/res/values/styles.xml b/android/app/src/main/res/values/styles.xml
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/main/res/values/styles.xml	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,18 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
++    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
++        <!-- Show a splash screen on the activity. Automatically removed when
++             the Flutter engine draws its first frame -->
++        <item name="android:windowBackground">@drawable/launch_background</item>
++    </style>
++    <!-- Theme applied to the Android Window as soon as the process has started.
++         This theme determines the color of the Android Window while your
++         Flutter UI initializes, as well as behind your Flutter UI while its
++         running.
++
++         This Theme is only used starting with V2 of Flutter's Android embedding. -->
++    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
++        <item name="android:windowBackground">?android:colorBackground</item>
++    </style>
++</resources>
+Index: android/app/src/profile/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/app/src/profile/AndroidManifest.xml b/android/app/src/profile/AndroidManifest.xml
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/app/src/profile/AndroidManifest.xml	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,8 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="norton.dev.todo_list">
++    <!-- The INTERNET permission is required for development. Specifically,
++         the Flutter tool needs it to communicate with the running application
++         to allow setting breakpoints, to provide hot reload, etc.
++    -->
++    <uses-permission android:name="android.permission.INTERNET"/>
++</manifest>
+Index: android/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/build.gradle b/android/build.gradle
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/build.gradle	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,31 @@
++buildscript {
++    ext.kotlin_version = '1.6.10'
++    repositories {
++        google()
++        mavenCentral()
++    }
++
++    dependencies {
++        classpath 'com.android.tools.build:gradle:7.1.2'
++        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
++    }
++}
++
++allprojects {
++    repositories {
++        google()
++        mavenCentral()
++    }
++}
++
++rootProject.buildDir = '../build'
++subprojects {
++    project.buildDir = "${rootProject.buildDir}/${project.name}"
++}
++subprojects {
++    project.evaluationDependsOn(':app')
++}
++
++task clean(type: Delete) {
++    delete rootProject.buildDir
++}
+Index: android/gradle.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/android/gradle.properties b/android/gradle.properties
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/gradle.properties	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,3 @@
++org.gradle.jvmargs=-Xmx1536M
++android.useAndroidX=true
++android.enableJetifier=true
+Index: android/gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/android/gradle/wrapper/gradle-wrapper.properties b/android/gradle/wrapper/gradle-wrapper.properties
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/gradle/wrapper/gradle-wrapper.properties	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,5 @@
++distributionBase=GRADLE_USER_HOME
++distributionPath=wrapper/dists
++zipStoreBase=GRADLE_USER_HOME
++zipStorePath=wrapper/dists
++distributionUrl=https\://services.gradle.org/distributions/gradle-7.4-all.zip
+Index: android/settings.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/android/settings.gradle b/android/settings.gradle
+new file mode 100644
+--- /dev/null	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
++++ b/android/settings.gradle	(revision cfc8ca3fa652fb73006798cef91d255678aed473)
+@@ -0,0 +1,11 @@
++include ':app'
++
++def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
++def properties = new Properties()
++
++assert localPropertiesFile.exists()
++localPropertiesFile.withReader("UTF-8") { reader -> properties.load(reader) }
++
++def flutterSdkPath = properties.getProperty("flutter.sdk")
++assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
++apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+diff --git a/android/app/src/main/res/mipmap-hdpi/ic_launcher.png b/android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..16d0d4517e8bcef81e9586f44255d7e2833d5875
+GIT binary patch
+literal 2105
+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
+
+diff --git a/android/app/src/main/res/mipmap-mdpi/ic_launcher.png b/android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..1d6f8e456d943c0d08d4e9bce1d61381a633bbca
+GIT binary patch
+literal 1555
+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
+FV1kE`=9T~e
+
+diff --git a/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png b/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..9f85935693b0ded8ec675a90c41e729421b51f7e
+GIT binary patch
+literal 2918
+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
+Qa{vGU07*qoM6N<$f@oWj0ssI2
+
+diff --git a/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png b/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..eddcba712e1400b752fbae92a8434eb4e6ca6fb1
+GIT binary patch
+literal 4219
+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
+
+diff --git a/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png b/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..9d55f7cd87b79c6189b4e09848a87875be0d3070
+GIT binary patch
+literal 5633
+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
+Oy_6L-6sqOTL;eTqmwhk*
+
